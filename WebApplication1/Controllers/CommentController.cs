@@ -8,12 +8,12 @@ namespace WebApplication1.Controllers
     [ApiController]
     [Route("teachers")]
 
-    public class TeacherController : Controller
+    public class CommentController : Controller
     {
         public readonly TeacherRepository _teacherRepository;
 
 
-        public TeacherController(TeacherRepository teacherRepository)
+        public CommentController(TeacherRepository teacherRepository)
         {
             _teacherRepository = teacherRepository;
         }
