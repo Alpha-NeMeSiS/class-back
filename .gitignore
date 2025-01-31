@@ -1,5 +1,16 @@
 # Ignore les fichiers temporaires, les builds, et les fichiers générés par Visual Studio
 
+# Ignorer les fichiers temporaires de Visual Studio
+.vs/
+
+# Ignorer les logs, les bases de données et les fichiers temporaires globaux
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+*.log
+*.sqlite
+
 ###################
 # Compiled source #
 ###################
