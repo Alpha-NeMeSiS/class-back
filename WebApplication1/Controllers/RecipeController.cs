@@ -8,11 +8,11 @@ namespace WebApplication1.Controllers
         [ApiController]
         [Route("Subjects")]
 
-        public class SubjectController : Controller
+        public class RecipeController : Controller
         {
             public readonly SubjectRepository _SubjectRepository;
 
-            public SubjectController(SubjectRepository SubjectRepository)
+            public RecipeController(SubjectRepository SubjectRepository)
             {
                 _SubjectRepository = SubjectRepository;
             }
