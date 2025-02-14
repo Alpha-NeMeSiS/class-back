@@ -10,23 +10,23 @@ namespace WebApplication1.Controllers
 
     public class CourseController : Controller
     {
-        public readonly CourseRepository _courseRepository;
+        public readonly RecipeRepository _courseRepository;
 
-        public CourseController(CourseRepository courseRepository)
+        public CourseController(RecipeRepository courseRepository)
         {
             _courseRepository = courseRepository;
         }
 
-        [HttpGet]
-        public ActionResult<ICollection<Course>> GetCourses()
-        {
-            return Ok(_courseRepository.GetCourses());
-        }
-        [HttpPost]
-        public ActionResult CreateCourse(CoursCreateDTO course)
-        {
-            _courseRepository.CreateCourse(course);
-            return Ok();
-        }
+        //[HttpGet]
+        //public ActionResult<ICollection<Comment>> GetCourses()
+        //{
+        //    return Ok(_courseRepository.GetCourses());
+        //}
+        //[HttpPost]
+        //public ActionResult CreateCourse(RecipeDTO course)
+        //{
+        //    _courseRepository.CreateCourse(course);
+        //    return Ok();
+        //}
     }
 }

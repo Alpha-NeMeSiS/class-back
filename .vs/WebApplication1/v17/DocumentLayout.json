@@ -1,50 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\",
+  "WorkspaceRootPath": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|c:\\users\\edelemos\\documents\\projet final\\class-back\\webapplication1\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|c:\\users\\edelemos\\documents\\projet final\\class-back\\webapplication1\\controllers\\commentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\commentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\models\\subject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\subject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\repositories\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\repositories\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\models\\course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\dto\\courscreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\dto\\courscreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\repositories\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\repositories\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\dto\\subjectcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\dto\\subjectcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|z:\\documents\\webapplication.old\\webapplication.old\\webapplication1\\migrations\\20250131121350_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\migrations\\20250131121350_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|c:\\users\\edelemos\\documents\\projet final\\class-back\\webapplication1\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BE933C1F-4AAF-4BFB-B057-CE38FDEF40B6}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -57,141 +25,43 @@
           "SelectedChildIndex": 1,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Program.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Program.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Program.cs",
-              "RelativeToolTip": "WebApplication1\\Program.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEUAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "CommentController.cs",
+              "DocumentMoniker": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\CommentController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\CommentController.cs",
+              "ToolTip": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\CommentController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\CommentController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-31T12:49:50.169Z",
+              "WhenOpened": "2025-02-14T15:32:25.449Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "20250131121350_init.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Migrations\\20250131121350_init.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Migrations\\20250131121350_init.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Migrations\\20250131121350_init.cs",
-              "RelativeToolTip": "WebApplication1\\Migrations\\20250131121350_init.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\UserController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-31T12:13:50.828Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "WebApplication1\\Properties\\launchSettings.json",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Properties\\launchSettings.json",
-              "RelativeToolTip": "WebApplication1\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-12-06T15:14:42.859Z"
+              "WhenOpened": "2025-02-14T15:20:30.528Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "CourseController.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Controllers\\CourseController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\CourseController.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Controllers\\CourseController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\CourseController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "RecipeController.cs",
+              "DocumentMoniker": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\RecipeController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\RecipeController.cs",
+              "ToolTip": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\Controllers\\RecipeController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\RecipeController.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAUwCAAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T15:13:56.287Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\AuthController.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T15:13:55.548Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Subject.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Models\\Subject.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Models\\Subject.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Models\\Subject.cs",
-              "RelativeToolTip": "WebApplication1\\Models\\Subject.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T13:07:35.502Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "SubjectCreateDTO.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\DTO\\SubjectCreateDTO.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\DTO\\SubjectCreateDTO.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\DTO\\SubjectCreateDTO.cs",
-              "RelativeToolTip": "WebApplication1\\DTO\\SubjectCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T13:07:26.554Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Course.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Models\\Course.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Models\\Course.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Models\\Course.cs",
-              "RelativeToolTip": "WebApplication1\\Models\\Course.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T13:13:34.694Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CoursCreateDTO.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\DTO\\CoursCreateDTO.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\DTO\\CoursCreateDTO.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\DTO\\CoursCreateDTO.cs",
-              "RelativeToolTip": "WebApplication1\\DTO\\CoursCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T13:06:16.559Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CourseRepository.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Repositories\\CourseRepository.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Repositories\\CourseRepository.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Repositories\\CourseRepository.cs",
-              "RelativeToolTip": "WebApplication1\\Repositories\\CourseRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T12:58:18.176Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "SubjectRepository.cs",
-              "DocumentMoniker": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Repositories\\SubjectRepository.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Repositories\\SubjectRepository.cs",
-              "ToolTip": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\Repositories\\SubjectRepository.cs",
-              "RelativeToolTip": "WebApplication1\\Repositories\\SubjectRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T13:04:06.003Z"
+              "WhenOpened": "2025-02-14T15:19:21.288Z",
+              "EditorCaption": ""
             }
           ]
         }

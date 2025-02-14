@@ -1,41 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTO;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
+using WebApplication1.Service;
 
 namespace WebApplication1.Controllers
 {
+    [Route("api/comments")]
     [ApiController]
-    [Route("teachers")]
-
-    public class CommentController : Controller
+    public class CommentController : ControllerBase
     {
-        public readonly TeacherRepository _teacherRepository;
+        private readonly CommentService _commentService;
 
-
-        public CommentController(TeacherRepository teacherRepository)
+        public CommentController(CommentService commentService)
         {
-            _teacherRepository = teacherRepository;
+            _commentService = commentService;
         }
 
-        [HttpGet]
-        public ActionResult<ICollection<Teacher>> GetTeachers()
+        // Récupérer les commentaires d'une recette
+        [HttpGet("/api/recipes/{recipeId}/comments")]
+        public async Task<IActionResult> GetCommentsByRecipe(int recipeId)
         {
-            return Ok(_teacherRepository.GetTeachers());
-        }
-        [HttpPost]
-        public ActionResult CreateTeacher(TeacherCreateDTO teacher)
-        {
-            _teacherRepository.CreateTeacher(teacher);
-            return Ok();
-        }
-        // Update method
-        [HttpPut("{id}")]
-        public ActionResult UpdateTeacher(int id, TeacherUpdateDTO teacherUpdateDTO)
-        {
-            var result = _teacherRepository.UpdateTeacher(id, teacherUpdateDTO);
-            return result; // Retourner le résultat directement depuis le dépôt
+            var comments = await _commentService.GetCommentsByRecipe(recipeId);
+            return Ok(comments);
         }
 
+        // Ajouter un commentaire (authentification requise)
+        [HttpPost("/api/recipes/{recipeId}/comments")]
+        //[Authorize]
+        public async Task<IActionResult> AddComment(int recipeId, [FromBody] CommentDTO commentDto)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return Unauthorized();
+
+            var comment = await _commentService.AddComment(recipeId, userId, commentDto);
+            return CreatedAtAction(nameof(GetCommentsByRecipe), new { recipeId = recipeId }, comment);
+        }
+
+        // Supprimer un commentaire (seulement par son auteur)
+        [HttpDelete("{id}")]
+        //[Authorize]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return Unauthorized();
+
+            var result = await _commentService.DeleteComment(id, userId);
+            if (!result) return NotFound(new { Message = "Commentaire non trouvé ou accès refusé" });
+
+            return NoContent();
+        }
     }
 }

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\WebApplication1.csproj": {}
+    "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\WebApplication1.csproj": {}
   },
   "projects": {
-    "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\WebApplication1.csproj": {
+    "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\WebApplication1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\WebApplication1.csproj",
+        "projectUniqueName": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\WebApplication1.csproj",
         "projectName": "WebApplication1",
-        "projectPath": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\WebApplication1.csproj",
-        "packagesPath": "C:\\Users\\edelemos.EDUTICE\\.nuget\\packages\\",
-        "outputPath": "Z:\\Documents\\WebApplication.old\\WebApplication.old\\WebApplication1\\obj\\",
+        "projectPath": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\WebApplication1.csproj",
+        "packagesPath": "C:\\Users\\edelemos\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\edelemos\\Documents\\projet final\\class-back\\WebApplication1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\edelemos.EDUTICE\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\edelemos\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

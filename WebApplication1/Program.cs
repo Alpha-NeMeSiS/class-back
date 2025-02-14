@@ -24,13 +24,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<TeacherRepository>();
-builder.Services.AddScoped<CourseRepository>();
-builder.Services.AddScoped<SubjectRepository>();
-builder.Services.AddDbContext<CourseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<RecipeRepository>();
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AutheService>();
 builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<CourseContext>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
