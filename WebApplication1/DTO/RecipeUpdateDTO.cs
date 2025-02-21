@@ -3,7 +3,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.DTO
 {
-    public class RecipeDTO
+    public class RecipeUpdateDTO
     {
         public string Title { get; set; }
         public string Description { get; set; }

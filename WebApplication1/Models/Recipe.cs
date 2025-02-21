@@ -35,6 +35,8 @@ namespace WebApplication1.Models
             //Lite des commentaires
             public List<Comment> Comments { get; set; } = new List<Comment>();
 
-            public string CreatedBy { get; set; } // UserId du créateur
+            [ForeignKey("UserId")]
+            public int CreatedBy { get; set; } // UserId du créateur
+
         }
 }

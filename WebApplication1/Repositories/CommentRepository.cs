@@ -34,5 +34,9 @@ namespace WebApplication1.Repositories
             _context.Comments.Remove(comment);
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<Comment> GetCommentById(int id)
+        {
+            return await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == id);
+        }
     }
 }

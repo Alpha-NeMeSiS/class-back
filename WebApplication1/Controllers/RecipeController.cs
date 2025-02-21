@@ -41,22 +41,19 @@ namespace WebApplication1.Controllers
         //[Authorize]
         public async Task<IActionResult> CreateRecipe([FromBody] RecipeDTO recipeDto)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
 
-            var recipe = await _recipeService.CreateRecipe(recipeDto, userId);
+            var recipe = await _recipeService.CreateRecipe(recipeDto);
             return CreatedAtAction(nameof(GetRecipeById), new { id = recipe.RecipeId }, recipe);
         }
 
         // Modifier une recette (seulement par son créateur)
         [HttpPut("{id}")]
         //[Authorize]
-        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeDTO recipeDto)
+        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeUpdateDTO recipeDto)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
 
-            var result = await _recipeService.UpdateRecipe(id, recipeDto, userId);
+
+            var result = await _recipeService.UpdateRecipe(id, recipeDto);
             if (!result) return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
 
             return NoContent();
@@ -65,12 +62,10 @@ namespace WebApplication1.Controllers
         // Supprimer une recette (seulement par son créateur)
         [HttpDelete("{id}")]
         //[Authorize]
-        public async Task<IActionResult> DeleteRecipe(int id)
+        public async Task<IActionResult> DeleteRecipe(int id,int UserId)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
 
-            var result = await _recipeService.DeleteRecipe(id, userId);
+            var result = await _recipeService.DeleteRecipe(id,UserId);
             if (!result) return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
 
             return NoContent();

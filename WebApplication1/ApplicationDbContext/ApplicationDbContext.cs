@@ -16,4 +16,5 @@ namespace WebApplication1.CourseDbContext
         public DbSet<Step> Steps { get; set; } // Ajout des étapes
         public DbSet<Role> Roles { get; set; } // Ajout des rôles
     }
+
 }

@@ -29,7 +29,7 @@ namespace WebApplication1.Controllers
         // Ajouter un commentaire (authentification requise)
         [HttpPost("/api/recipes/{recipeId}/comments")]
         //[Authorize]
-        public async Task<IActionResult> AddComment(int recipeId, [FromBody] CommentDTO commentDto)
+        public async Task<IActionResult> AddComment(int recipeId, [FromBody] CommentCreateDTO commentDto)
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();

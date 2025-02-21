@@ -72,7 +72,7 @@
       },
       {
         "Name": "recipeDto",
-        "Type": "WebApplication1.DTO.RecipeDTO",
+        "Type": "WebApplication1.DTO.RecipeUpdateDTO",
         "IsRequired": true
       }
     ],
@@ -90,6 +90,11 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "UserId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -125,7 +130,7 @@
       },
       {
         "Name": "commentDto",
-        "Type": "WebApplication1.DTO.CommentDTO",
+        "Type": "WebApplication1.DTO.CommentCreateDTO",
         "IsRequired": true
       }
     ],

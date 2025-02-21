@@ -2,31 +2,42 @@
 using WebApplication1.CourseDbContext;
 using WebApplication1.DTO;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
 
 namespace WebApplication1.Service
 {
     public class CommentService
     {
-        private readonly ApplicationDbContext _context;
+        public CommentRepository _commentRepository { get; set; }
 
-        public CommentService(ApplicationDbContext context)
+        public CommentService(CommentRepository commentRepository)
         {
-            _context = context;
+            _commentRepository = commentRepository;
         }
 
         //  Récupérer les commentaires d'une recette
-        public async Task<IEnumerable<Comment>> GetCommentsByRecipe(int recipeId)
+        public async Task<IEnumerable<CommentDTO>> GetCommentsByRecipe(int recipeId)
         {
-            return await _context.Comments
-                .Where(c => c.RecipeId == recipeId)
-                .Include(c => c.User)
-                .ToListAsync();
+            List<CommentDTO> commentsTOReturn = new List<CommentDTO>();
+            IEnumerable<Comment> comments = await _commentRepository.GetCommentsByRecipe(recipeId);
+            foreach(var comment in comments)
+            {
+                var cToAdd = new CommentDTO()
+                {
+                    CommentId = comment.CommentId,
+                    Content = comment.Content,
+                    Rating = comment.Rating,
+                    RecipeId = comment.RecipeId
+                };
+                commentsTOReturn.Add(cToAdd);
+            }
+            return commentsTOReturn;
         }
 
         //  Ajouter un commentaire sur une recette
-        public async Task<Comment> AddComment(int recipeId, string userId, CommentDTO commentDto)
+        public async Task<Comment> AddComment(int recipeId, string userId, CommentCreateDTO commentDto)
         {
-            var recipe = await _context.Recipes.FindAsync(recipeId);
+            var recipe = await _commentRepository.GetCommentsByRecipe(recipeId);
             if (recipe == null)
                 throw new Exception("Recette non trouvée.");
 
@@ -39,20 +50,20 @@ namespace WebApplication1.Service
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            comment= await _commentRepository.AddComment(comment);
+
             return comment;
         }
 
         //  Supprimer un commentaire (seulement par son auteur)
         public async Task<bool> DeleteComment(int commentId, string userId)
         {
-            var comment = await _context.Comments.FindAsync(commentId);
+
+             var comment = await _commentRepository.GetCommentById(commentId);
             if (comment == null || comment.UserId != userId)
                 return false;
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            await _commentRepository.DeleteComment(comment);
             return true;
         }
     }
