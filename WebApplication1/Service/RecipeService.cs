@@ -125,7 +125,7 @@ namespace WebApplication1.Service
         }
 
         //  Supprimer une recette (seulement par son créateur)
-        public async Task<bool> DeleteRecipe(int id, int UserId)
+        public async Task<bool> DeleteRecipe(int id, string UserId)
         {
             var recipe = await _recipeRepository.GetRecipeById(id);
             if (recipe == null || recipe.CreatedBy != UserId)

@@ -62,7 +62,7 @@ namespace WebApplication1.Controllers
         // Supprimer une recette (seulement par son créateur)
         [HttpDelete("{id}")]
         //[Authorize]
-        public async Task<IActionResult> DeleteRecipe(int id,int UserId)
+        public async Task<IActionResult> DeleteRecipe(int id,string UserId)
         {
 
             var result = await _recipeService.DeleteRecipe(id,UserId);

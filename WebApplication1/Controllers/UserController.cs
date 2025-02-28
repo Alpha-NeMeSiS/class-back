@@ -16,17 +16,5 @@ namespace WebApplication1.Controllers
         {
             _courseRepository = courseRepository;
         }
-
-        //[HttpGet]
-        //public ActionResult<ICollection<Comment>> GetCourses()
-        //{
-        //    return Ok(_courseRepository.GetCourses());
-        //}
-        //[HttpPost]
-        //public ActionResult CreateCourse(RecipeDTO course)
-        //{
-        //    _courseRepository.CreateCourse(course);
-        //    return Ok();
-        //}
     }
 }

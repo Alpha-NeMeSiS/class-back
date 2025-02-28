@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApplication1.Migrations
 {
     /// <inheritdoc />
-    public partial class inittable : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,7 +67,7 @@ namespace WebApplication1.Migrations
                     Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Budget = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DietType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
