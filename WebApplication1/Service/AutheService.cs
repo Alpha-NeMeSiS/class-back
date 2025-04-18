@@ -31,6 +31,14 @@ namespace WebApplication1.Service
                 UserName = user.Email
             };
             var result = await _userManager.CreateAsync(userToAdd,user.Password);
+            if (result.Succeeded)
+            {
+                return;
+            }
+            else
+            {
+                throw new BadHttpRequestException(result.Errors.FirstOrDefault().Description);
+            }
         }
         public async Task RoleAsync(RoleDTO role)
         {

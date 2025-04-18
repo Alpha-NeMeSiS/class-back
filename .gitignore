@@ -1,7 +1,11 @@
 # Ignore les fichiers temporaires, les builds, et les fichiers générés par Visual Studio
 
-# Ignorer les fichiers temporaires de Visual Studio
+# Fichiers de configuration Visual Studio
 .vs/
+
+# Sorties de compilation
+**/bin/
+**/obj/
 
 # Ignorer les logs, les bases de données et les fichiers temporaires globaux
 .DS_Store?
