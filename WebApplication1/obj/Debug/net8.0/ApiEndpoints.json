@@ -84,7 +84,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebApplication1.Controllers.SubjectController",
+    "ContainingType": "WebApplication1.Controllers.RecipeController",
     "Method": "GetSubjects",
     "RelativePath": "Subjects",
     "HttpMethod": "GET",
@@ -104,7 +104,7 @@
     ]
   },
   {
-    "ContainingType": "WebApplication1.Controllers.SubjectController",
+    "ContainingType": "WebApplication1.Controllers.RecipeController",
     "Method": "CreateSubject",
     "RelativePath": "Subjects",
     "HttpMethod": "POST",
@@ -120,7 +120,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebApplication1.Controllers.TeacherController",
+    "ContainingType": "WebApplication1.Controllers.CommentController",
     "Method": "GetTeachers",
     "RelativePath": "teachers",
     "HttpMethod": "GET",
@@ -140,7 +140,7 @@
     ]
   },
   {
-    "ContainingType": "WebApplication1.Controllers.TeacherController",
+    "ContainingType": "WebApplication1.Controllers.CommentController",
     "Method": "CreateTeacher",
     "RelativePath": "teachers",
     "HttpMethod": "POST",
@@ -156,7 +156,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebApplication1.Controllers.TeacherController",
+    "ContainingType": "WebApplication1.Controllers.CommentController",
     "Method": "UpdateTeacher",
     "RelativePath": "teachers/{id}",
     "HttpMethod": "PUT",
