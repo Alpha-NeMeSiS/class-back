@@ -10,18 +10,20 @@ using WebApplication1.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Définition d’une politique CORS pour autoriser le front 
+// 1. Définition d’une politique CORS pour autoriser le front
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // URL de votre front 
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins("http://localhost:5173")
+           .AllowAnyHeader()
+           .AllowAnyMethod()
+           .AllowCredentials();
+
     });
 });
 
-// Ajout des services Swagger avec configuration de la sécurité JWT
+// 2. Swagger + config sécurité JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -50,16 +52,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Ajout des services MVC/Controllers...
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
-
-// Ajout des services d’exploration d’API (Swagger)
 builder.Services.AddEndpointsApiExplorer();
 
-// Injection des dépendances (repositories & services)
+
 builder.Services.AddScoped<StepRepository>();
 builder.Services.AddScoped<IngredientRepository>();
 builder.Services.AddScoped<RecipeService>();
@@ -68,16 +68,16 @@ builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<AutheService>();
 
-// Configuration du DbContext Entity Framework Core
+// DbContext EF Core
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configuration Identity
+//  Identity
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Configuration JWT
+//  Authentification JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
@@ -102,19 +102,18 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configuration du pipeline HTTP
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Activation du CORS avant l’authentification et l’autorisation
+
 app.UseCors("FrontOrigins");
 
 app.UseHttpsRedirection();
 
-// Activation de l’authentification et de l’autorisation JWT
 app.UseAuthentication();
 app.UseAuthorization();
 

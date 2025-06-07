@@ -8,9 +8,9 @@ using WebApplication1.Service;
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route("auth")]
+    [Route("api/auth")]
 
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly AutheService _autheService;
         public AuthController(AutheService autheService)
@@ -19,13 +19,25 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("sigin")]
-        public async Task<ActionResult> Sigin(SiginDTO user)
+        public async Task<ActionResult> Sigin([FromBody] SiginDTO user)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Erreur sur le champ {entry.Key} : {error.ErrorMessage}");
+                    }
+                }
+                return BadRequest(ModelState);
+            }
+
             await _autheService.Sigin(user);
             return Ok();
-           
-
         }
+
+
         [HttpPost("role")]
         public async Task<ActionResult> RoleAsync(RoleDTO role)
         {
