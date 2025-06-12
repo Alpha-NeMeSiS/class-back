@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ï»¿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.Features;         // â† AjoutÃ©
 using System.Text;
 using WebApplication1.CourseDbContext;
 using WebApplication1.Models;
@@ -10,20 +11,19 @@ using WebApplication1.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Définition d’une politique CORS pour autoriser le front
+// 1. Politique CORS pour autoriser le front
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontOrigins", policy =>
     {
         policy.WithOrigins("http://localhost:5173")
-           .AllowAnyHeader()
-           .AllowAnyMethod()
-           .AllowCredentials();
-
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
-// 2. Swagger + config sécurité JWT
+// 2. Swagger + configuration JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -33,9 +33,8 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Entrez 'Bearer' suivi d'un espace et de votre token JWT",
+        Description = "Entrez 'Bearer ' suivi de votre token JWT",
     });
-
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -52,14 +51,21 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// 3. Controllers + JSON
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+// 4. Autoriser multipart/form-data jusquâ€™Ã  50 Mo
+builder.Services.Configure<FormOptions>(opts =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    opts.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 Mo
 });
-builder.Services.AddEndpointsApiExplorer();
 
-
+// 5. DI pour vos services et repositories
 builder.Services.AddScoped<StepRepository>();
 builder.Services.AddScoped<IngredientRepository>();
 builder.Services.AddScoped<RecipeService>();
@@ -68,19 +74,18 @@ builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<AutheService>();
 
-// DbContext EF Core
+// 6. EF Core
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//  Identity
+// 7. Identity
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-//  Authentification JWT
+// 8. Authentification JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -102,21 +107,23 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-
+// 9. Swagger en dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// 10. Servir les fichiers statiques (wwwroot/uploads)
+app.UseStaticFiles();
 
+// 11. CORS, HTTPS, Auth
 app.UseCors("FrontOrigins");
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
+// 12. Map controllers
 app.MapControllers();
 
 app.Run();

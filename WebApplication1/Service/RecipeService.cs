@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.CourseDbContext;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.DTO;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
@@ -9,131 +9,147 @@ namespace WebApplication1.Service
 {
     public class RecipeService
     {
-        public RecipeRepository _recipeRepository { get; set; }
-        public IngredientRepository _ingredientRepository { get; set; }
+        private readonly RecipeRepository _repo;
 
-        public StepRepository _stepRepository { get; set; }
-
-        public RecipeService(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, StepRepository stepRepository)
+        public RecipeService(RecipeRepository repo)
         {
-            _recipeRepository = recipeRepository;
-            _ingredientRepository = ingredientRepository;
-            _stepRepository = stepRepository;
+            _repo = repo;
         }
 
-
-        //  Récupérer toutes les recettes
-        public async Task<IEnumerable<Recipe>> GetAllRecipes()
+        // Récupère toutes les recettes
+        public async Task<List<RecipeDTO>> GetAllRecipes()
         {
-            return await _recipeRepository.GetAllRecipes();
+            var toutes = await _repo.GetAllAsync();
+            return toutes.Select(r => new RecipeDTO
+            {
+                RecipeId = r.RecipeId,
+                Title = r.Title,
+                Description = r.Description,
+                PreparationTime = r.PreparationTime,
+                CookingTime = r.CookingTime,
+                Servings = r.Servings,    // ajouté
+                Category = r.Category,    // ajouté
+                ImageUrl = r.ImageUrl,    // ajouté
+                Difficulty = r.Difficulty,
+                Budget = r.Budget,
+                DietType = r.DietType,
+                UserId = r.CreatedBy,
+                Ingredients = r.Ingredients
+                                   .Select(i => new IngredientDTO { Name = i.Name })
+                                   .ToList(),
+                Steps = r.Steps
+                                   .Select(s => new StepDTO { Description = s.Description, Order = s.Order })
+                                   .ToList()
+            }).ToList();
         }
 
-        //  Récupérer une recette par ID
-        public async Task<RecipeDTO?> GetRecipeById(int id)
+        // Récupère une recette par son ID
+        public async Task<RecipeDTO> GetRecipeById(int id)
         {
-            Recipe recipe = await _recipeRepository.GetRecipeById(id);
+            var r = await _repo.GetByIdAsync(id);
+            if (r == null) return null;
 
-            if(recipe == null)
+            return new RecipeDTO
             {
-                throw new Exception("Impossible de trouver la recette.");
-            }
-
-            List<IngredientDTO> listeIngredients = new List<IngredientDTO>();
-            IEnumerable<Ingredient> ingredients = await _ingredientRepository.GetIngredientByRecipeId(id);
-            foreach (var ingredient in ingredients)
-            {
-                var iToAdd = new IngredientDTO()
-                {
-                    IngredientId = ingredient.IngredientId,
-                };
-                listeIngredients.Add(iToAdd);
-            }
-
-            List<StepDTO> listeSteps = new List<StepDTO>();
-            IEnumerable<Step> steps = await _stepRepository.GetStepByRecipeId(id);
-            foreach (var step in steps)
-            {
-                var sToAdd = new StepDTO()
-                {
-                    StepId = step.StepId,
-                };
-                listeSteps.Add(sToAdd);
-            }
-
-            return new RecipeDTO()
-            {
-                Title = recipe.Title,
-                Description = recipe.Description,
-                PreparationTime = recipe.PreparationTime,
-                CookingTime = recipe.CookingTime,
-                Difficulty = recipe.Difficulty,
-                Budget = recipe.Budget,
-                DietType = recipe.DietType,
-                UserId = recipe.CreatedBy,
-                Ingredients = listeIngredients,
-                Steps = listeSteps
-
+                RecipeId = r.RecipeId,
+                Title = r.Title,
+                Description = r.Description,
+                PreparationTime = r.PreparationTime,
+                CookingTime = r.CookingTime,
+                Servings = r.Servings,    // ajouté
+                Category = r.Category,    // ajouté
+                ImageUrl = r.ImageUrl,    // ajouté
+                Difficulty = r.Difficulty,
+                Budget = r.Budget,
+                DietType = r.DietType,
+                UserId = r.CreatedBy,
+                Ingredients = r.Ingredients
+                                   .Select(i => new IngredientDTO { Name = i.Name })
+                                   .ToList(),
+                Steps = r.Steps
+                                   .Select(s => new StepDTO { Description = s.Description, Order = s.Order })
+                                   .ToList()
             };
         }
 
-        //  Ajouter une nouvelle recette
-        public async Task<Recipe> CreateRecipe(RecipeDTO recipeDto)
+        // Crée une nouvelle recette
+        public async Task<RecipeDTO> CreateRecipe(RecipeDTO dto)
         {
-            var recipe = new Recipe
+            var entite = new Recipe
             {
-                Title = recipeDto.Title,
-                Description = recipeDto.Description,
-                PreparationTime = recipeDto.PreparationTime,
-                CookingTime = recipeDto.CookingTime,
-                Difficulty = recipeDto.Difficulty,
-                Budget = recipeDto.Budget,
-                DietType = recipeDto.DietType,
-                CreatedBy = recipeDto.UserId,
-                Ingredients = recipeDto.Ingredients.Select(i => new Ingredient
-                {
-                    Name = i.Name,
-                    Quantity = i.Quantity,
-                    Unit = i.Unit
-                }).ToList(),
-                Steps = recipeDto.Steps.Select(s => new Step
-                {
-                    Description = s.Description,
-                    Order = s.Order
-                }).ToList()
+                Title = dto.Title,
+                Description = dto.Description,
+                PreparationTime = dto.PreparationTime,
+                CookingTime = dto.CookingTime,
+                Servings = dto.Servings,     // ajouté
+                Category = dto.Category,     // ajouté
+                ImageUrl = dto.ImageUrl,     // ajouté
+                Difficulty = dto.Difficulty,
+                Budget = dto.Budget,
+                DietType = dto.DietType,
+                CreatedBy = dto.UserId,
+                Ingredients = dto.Ingredients
+                                   .Select(i => new Ingredient { Name = i.Name })
+                                   .ToList(),
+                Steps = dto.Steps
+                                   .Select(s => new Step { Description = s.Description, Order = s.Order })
+                                   .ToList()
             };
-            recipe = await _recipeRepository.CreateRecipe(recipe);
-            return recipe;
+
+            var cree = await _repo.AddAsync(entite);
+
+            // On renvoie le DTO complet, avec l'ID généré
+            return new RecipeDTO
+            {
+                RecipeId = cree.RecipeId,
+                Title = cree.Title,
+                Description = cree.Description,
+                PreparationTime = cree.PreparationTime,
+                CookingTime = cree.CookingTime,
+                Servings = cree.Servings,    // ajouté
+                Category = cree.Category,    // ajouté
+                ImageUrl = cree.ImageUrl,    // ajouté
+                Difficulty = cree.Difficulty,
+                Budget = cree.Budget,
+                DietType = cree.DietType,
+                UserId = cree.CreatedBy,
+                Ingredients = cree.Ingredients
+                                   .Select(i => new IngredientDTO { Name = i.Name })
+                                   .ToList(),
+                Steps = cree.Steps
+                                   .Select(s => new StepDTO { Description = s.Description, Order = s.Order })
+                                   .ToList()
+            };
         }
 
-        //  Modifier une recette (seulement par son créateur)
-        public async Task<bool> UpdateRecipe(int id, RecipeUpdateDTO recipeDto)
+        // Met à jour une recette existante
+        public async Task<bool> UpdateRecipe(int id, RecipeUpdateDTO dto)
         {
-            var recipe = await _recipeRepository.GetRecipeById(id);
-            if (recipe == null || recipe.CreatedBy != recipeDto.UserId)
-                return false;
+            var r = await _repo.GetByIdAsync(id);
+            if (r == null) return false;
 
-            recipe.Title = recipeDto.Title;
-            recipe.Description = recipeDto.Description;
-            recipe.PreparationTime = recipeDto.PreparationTime;
-            recipe.CookingTime = recipeDto.CookingTime;
-            recipe.Difficulty = recipeDto.Difficulty;
-            recipe.Budget = recipeDto.Budget;
-            recipe.DietType = recipeDto.DietType;
+            r.Title = dto.Title;
+            r.Description = dto.Description;
+            r.PreparationTime = dto.PreparationTime;
+            r.CookingTime = dto.CookingTime;
+            r.Servings = dto.Servings;     // ajouté
+            r.Category = dto.Category;     // ajouté
+            r.ImageUrl = dto.ImageUrl;     // ajouté
+            r.Difficulty = dto.Difficulty;
+            r.Budget = dto.Budget;
+            r.DietType = dto.DietType;
+            r.CreatedBy = dto.UserId;
 
-            await _recipeRepository.UpdateRecipe(recipe);
+            // Ici vous pouvez mettre à jour Ingredients et Steps si nécessaire
+
+            await _repo.UpdateAsync(r);
             return true;
         }
 
-        //  Supprimer une recette (seulement par son créateur)
-        public async Task<bool> DeleteRecipe(int id, string UserId)
+        // Supprime une recette
+        public async Task<bool> DeleteRecipe(int id, string userId)
         {
-            var recipe = await _recipeRepository.GetRecipeById(id);
-            if (recipe == null || recipe.CreatedBy != UserId)
-                return false;
-
-
-            await _recipeRepository.DeleteRecipe(recipe);
-            return true;
+            return await _repo.DeleteAsync(id, userId);
         }
     }
 }

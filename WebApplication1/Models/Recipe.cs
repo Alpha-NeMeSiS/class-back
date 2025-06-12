@@ -1,42 +1,42 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace WebApplication1.Models
+using WebApplication1.Models;
+
+public class Recipe
 {
-        public class Recipe
-        {
-            [Key]
-            public int RecipeId { get; set; }
+    [Key]
+    public int RecipeId { get; set; }
 
-            [Required, MaxLength(100)]
-            public string Title { get; set; }
+    [Required, MaxLength(100)]
+    public string Title { get; set; }
 
-            public string Description { get; set; }
+    public string Description { get; set; }
 
-            [Required]
-            public int PreparationTime { get; set; } // en minutes
+    [Required]
+    public int PreparationTime { get; set; }
 
-            [Required]
-            public int CookingTime { get; set; } // en minutes
+    [Required]
+    public int CookingTime { get; set; }
 
-            [Required]
-            public string Difficulty { get; set; } // Facile, Moyen, Difficile
+    // ← Nouveau
+    [Required]
+    public int Servings { get; set; }
 
-            public string Budget { get; set; } // Économique, Moyen, Cher
+    // ← Nouveau
+    [MaxLength(50)]
+    public string Category { get; set; }
 
-            public string DietType { get; set; } // Végétarien, Sans Gluten, etc.
+    // ← Nouveau : URL du fichier uploadé
+    public string ImageUrl { get; set; }
 
-           //Lite des ingrédients
-            public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public string Difficulty { get; set; }
+    public string Budget { get; set; }
+    public string DietType { get; set; }
 
-            //Lite des étapes
-            public List<Step> Steps { get; set; } = new List<Step>();
+    public List<Ingredient> Ingredients { get; set; } = new();
+    public List<Step> Steps { get; set; } = new();
+    public List<Comment> Comments { get; set; } = new();
 
-            //Lite des commentaires
-            public List<Comment> Comments { get; set; } = new List<Comment>();
-
-            [ForeignKey("UserId")]
-            public string CreatedBy { get; set; } // UserId du créateur
-
-        }
+    [ForeignKey("UserId")]
+    public string CreatedBy { get; set; }
 }

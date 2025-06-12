@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// Controllers/RecipeController.cs
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.DTO;
-using WebApplication1.Models;
-using WebApplication1.Repositories;
-using WebApplication1.Service;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using WebApplication1.DTO;       // RecipeFormDto, IngredientDTO, StepDTO
+using WebApplication1.Models;    // Recipe, Ingredient, Step
+using WebApplication1.Service;   // RecipeService
 
 namespace WebApplication1.Controllers
 {
@@ -18,7 +23,80 @@ namespace WebApplication1.Controllers
             _recipeService = recipeService;
         }
 
-        // Récupérer toutes les recettes
+        // 1️⃣ Méthode POST pour recevoir un FormData (multipart/form-data)
+        [HttpPost]
+        public async Task<IActionResult> CreateRecipe([FromForm] RecipeFormDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // --- 1) Upload de l’image ---
+            string imageUrl = null;
+            if (dto.Image != null && dto.Image.Length > 0)
+            {
+                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsDir);
+
+                var uniqueFileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
+                var filePath = Path.Combine(uploadsDir, uniqueFileName);
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+
+                imageUrl = $"/uploads/{uniqueFileName}";
+            }
+
+            // --- 2) Mapping DTO → Entité métier ---
+            var recipe = new Recipe
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                PreparationTime = dto.PreparationTime,
+                CookingTime = dto.CookingTime,
+                Servings = dto.Servings,
+                Category = dto.Category,
+                ImageUrl = imageUrl,
+                CreatedBy = dto.UserId,
+                Ingredients = dto.Ingredients?
+                    .Select(name => new Ingredient { Name = name })
+                    .ToList()
+                    ?? new List<Ingredient>(),
+                Steps = dto.Instructions?
+                    .Select((text, idx) => new Step { Description = text, Order = idx + 1 })
+                    .ToList()
+                    ?? new List<Step>()
+            };
+
+            // --- 3) Appel au service (qui renvoie un RecipeDTO) ---
+            var createdDto = await _recipeService.CreateRecipe(new RecipeDTO
+            {
+                Title = recipe.Title,
+                Description = recipe.Description,
+                PreparationTime = recipe.PreparationTime,
+                CookingTime = recipe.CookingTime,
+                Servings = recipe.Servings,
+                Category = recipe.Category,
+                ImageUrl = recipe.ImageUrl,
+                UserId = recipe.CreatedBy,
+                Ingredients = recipe.Ingredients
+                                      .Select(i => new IngredientDTO { Name = i.Name })
+                                      .ToList(),
+                Steps = recipe.Steps
+                                      .Select(s => new StepDTO { Description = s.Description, Order = s.Order })
+                                      .ToList()
+            });
+
+            // --- 4) Retourne 201 Created avec l’objet créé ---
+            return CreatedAtAction(
+                nameof(GetRecipeById),
+                new { id = createdDto.RecipeId },
+                createdDto
+            );
+        }
+
+        // GET /api/recipes
         [HttpGet]
         public async Task<IActionResult> GetRecipes()
         {
@@ -26,47 +104,35 @@ namespace WebApplication1.Controllers
             return Ok(recipes);
         }
 
-        // Récupérer une recette par ID
+        // GET /api/recipes/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
             var recipe = await _recipeService.GetRecipeById(id);
-            if (recipe == null) return NotFound(new { Message = "Recette introuvable" });
+            if (recipe == null)
+                return NotFound(new { Message = "Recette introuvable" });
 
             return Ok(recipe);
         }
 
-        // Ajouter une nouvelle recette (authentification requise)
-        [HttpPost]
-        //[Authorize]
-        public async Task<IActionResult> CreateRecipe([FromBody] RecipeDTO recipeDto)
-        {
-
-            var recipe = await _recipeService.CreateRecipe(recipeDto);
-            return CreatedAtAction(nameof(GetRecipeById), new { id = recipe.RecipeId }, recipe);
-        }
-
-        // Modifier une recette (seulement par son créateur)
+        // PUT /api/recipes/{id}
         [HttpPut("{id}")]
-        //[Authorize]
         public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeUpdateDTO recipeDto)
         {
-
-
             var result = await _recipeService.UpdateRecipe(id, recipeDto);
-            if (!result) return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
+            if (!result)
+                return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
 
             return NoContent();
         }
 
-        // Supprimer une recette (seulement par son créateur)
+        // DELETE /api/recipes/{id}
         [HttpDelete("{id}")]
-        //[Authorize]
-        public async Task<IActionResult> DeleteRecipe(int id,string UserId)
+        public async Task<IActionResult> DeleteRecipe(int id, string userId)
         {
-
-            var result = await _recipeService.DeleteRecipe(id,UserId);
-            if (!result) return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
+            var result = await _recipeService.DeleteRecipe(id, userId);
+            if (!result)
+                return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
 
             return NoContent();
         }

@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿// Repositories/RecipeRepository.cs
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.CourseDbContext;
-using WebApplication1.DTO;
 using WebApplication1.Models;
+using WebApplication1.Service;
 
 namespace WebApplication1.Repositories
 {
-    public class RecipeRepository
+    // Veillez à déclarer également cette interface en public dans IRecipeRepository.cs
+    public class RecipeRepository : IRecipeRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -15,7 +20,8 @@ namespace WebApplication1.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Recipe>> GetAllRecipes()
+        // Récupère toutes les recettes (inclut ingrédients, étapes, commentaires)
+        public async Task<List<Recipe>> GetAllAsync()
         {
             return await _context.Recipes
                 .Include(r => r.Ingredients)
@@ -24,7 +30,8 @@ namespace WebApplication1.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Recipe?> GetRecipeById(int id)
+        // Récupère une recette par son ID
+        public async Task<Recipe?> GetByIdAsync(int id)
         {
             return await _context.Recipes
                 .Include(r => r.Ingredients)
@@ -33,23 +40,31 @@ namespace WebApplication1.Repositories
                 .FirstOrDefaultAsync(r => r.RecipeId == id);
         }
 
-        public async Task<Recipe> CreateRecipe(Recipe recipe)
+        // Ajoute une nouvelle recette et renvoie l’entité avec son ID
+        public async Task<Recipe> AddAsync(Recipe recipe)
         {
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
             return recipe;
         }
 
-        public async Task<bool> UpdateRecipe(Recipe recipe)
+        // Met à jour une recette existante
+        public async Task UpdateAsync(Recipe recipe)
         {
             _context.Recipes.Update(recipe);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteRecipe(Recipe recipe)
+        // Supprime une recette, uniquement si userId correspond au créateur
+        public async Task<bool> DeleteAsync(int id, string userId)
         {
+            var recipe = await _context.Recipes.FindAsync(id);
+            if (recipe == null || recipe.CreatedBy != userId)
+                return false;
+
             _context.Recipes.Remove(recipe);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
