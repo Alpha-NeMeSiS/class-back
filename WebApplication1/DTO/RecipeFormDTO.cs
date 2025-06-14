@@ -10,20 +10,19 @@ namespace WebApplication1.DTO
 
         [Range(0, int.MaxValue)] public int PreparationTime { get; set; }
         [Range(0, int.MaxValue)] public int CookingTime { get; set; }
-
         [Range(1, int.MaxValue)] public int Servings { get; set; }
-        public string Category { get; set; }
 
-        // Le fichier image envoyé par front
+        public string Category { get; set; }
         public IFormFile Image { get; set; }
 
-        // front fait `data.append("ingredients", item)` plusieurs fois
+        // on ajoute cette propriété pour recevoir les unités
+        public string[] IngredientUnits { get; set; }
+
+        // déjà existant : réceptionne plusieurs fois data.append("ingredients", name)
         public string[] Ingredients { get; set; }
 
-        // front fait `data.append("instructions", item)` plusieurs fois
         public string[] Instructions { get; set; }
 
-        // pour gérer la liaison à l’utilisateur courant si vous l’envoyez
-        public string UserId { get; set; }
+        [Required] public string UserId { get; set; }
     }
 }

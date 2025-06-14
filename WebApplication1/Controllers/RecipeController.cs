@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using WebApplication1.DTO;       // RecipeFormDto, IngredientDTO, StepDTO
-using WebApplication1.Models;    // Recipe, Ingredient, Step
-using WebApplication1.Service;   // RecipeService
+using WebApplication1.DTO;     // RecipeFormDto, RecipeDTO, etc.
+using WebApplication1.Models;  // Recipe, Ingredient, Step
+using WebApplication1.Service; // RecipeService
 
 namespace WebApplication1.Controllers
 {
@@ -23,32 +23,29 @@ namespace WebApplication1.Controllers
             _recipeService = recipeService;
         }
 
-        // 1️⃣ Méthode POST pour recevoir un FormData (multipart/form-data)
+        // POST /api/recipes
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateRecipe([FromForm] RecipeFormDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // --- 1) Upload de l’image ---
+            // 1) Upload de l'image
             string imageUrl = null;
             if (dto.Image != null && dto.Image.Length > 0)
             {
                 var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
                 Directory.CreateDirectory(uploadsDir);
 
-                var uniqueFileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
-                var filePath = Path.Combine(uploadsDir, uniqueFileName);
-
+                var fileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
+                var filePath = Path.Combine(uploadsDir, fileName);
                 using (var stream = System.IO.File.Create(filePath))
-                {
                     await dto.Image.CopyToAsync(stream);
-                }
-
-                imageUrl = $"/uploads/{uniqueFileName}";
+                imageUrl = $"/uploads/{fileName}";
             }
 
-            // --- 2) Mapping DTO → Entité métier ---
+            // 2) Construction de l'entité Recipe
             var recipe = new Recipe
             {
                 Title = dto.Title,
@@ -59,81 +56,99 @@ namespace WebApplication1.Controllers
                 Category = dto.Category,
                 ImageUrl = imageUrl,
                 CreatedBy = dto.UserId,
+
+                // On zippe nom & unité, chaîne vide si unité non fournie
                 Ingredients = dto.Ingredients?
-                    .Select(name => new Ingredient { Name = name })
+                    .Select((name, idx) => new Ingredient
+                    {
+                        Name = name,
+                        Unit = (dto.IngredientUnits != null && dto.IngredientUnits.Length > idx)
+                               ? dto.IngredientUnits[idx]
+                               : String.Empty
+                    })
                     .ToList()
-                    ?? new List<Ingredient>(),
+                  ?? new List<Ingredient>(),
+
                 Steps = dto.Instructions?
-                    .Select((text, idx) => new Step { Description = text, Order = idx + 1 })
+                    .Select((text, idx) => new Step
+                    {
+                        Description = text,
+                        Order = idx + 1
+                    })
                     .ToList()
-                    ?? new List<Step>()
+                  ?? new List<Step>()
             };
 
-            // --- 3) Appel au service (qui renvoie un RecipeDTO) ---
-            var createdDto = await _recipeService.CreateRecipe(new RecipeDTO
-            {
-                Title = recipe.Title,
-                Description = recipe.Description,
-                PreparationTime = recipe.PreparationTime,
-                CookingTime = recipe.CookingTime,
-                Servings = recipe.Servings,
-                Category = recipe.Category,
-                ImageUrl = recipe.ImageUrl,
-                UserId = recipe.CreatedBy,
-                Ingredients = recipe.Ingredients
-                                      .Select(i => new IngredientDTO { Name = i.Name })
-                                      .ToList(),
-                Steps = recipe.Steps
-                                      .Select(s => new StepDTO { Description = s.Description, Order = s.Order })
-                                      .ToList()
-            });
+            // 3) Persistance via le service
+            var created = await _recipeService.CreateRecipe(recipe);
 
-            // --- 4) Retourne 201 Created avec l’objet créé ---
+            // 4) Mapping du DTO de retour
+            var resultDto = new RecipeDTO
+            {
+                RecipeId = created.RecipeId,
+                Title = created.Title,
+                Description = created.Description,
+                PreparationTime = created.PreparationTime,
+                CookingTime = created.CookingTime,
+                Servings = created.Servings,
+                Category = created.Category,
+                ImageUrl = created.ImageUrl,
+                UserId = created.UserId,
+                Ingredients = created.Ingredients
+                                        .Select(i => new IngredientDTO
+                                        {
+                                            Name = i.Name,
+                                            Unit = i.Unit
+                                        })
+                                        .ToList(),
+                Steps = created.Steps
+                                        .Select(s => new StepDTO
+                                        {
+                                            Description = s.Description,
+                                            Order = s.Order
+                                        })
+                                        .ToList()
+            };
+
             return CreatedAtAction(
                 nameof(GetRecipeById),
-                new { id = createdDto.RecipeId },
-                createdDto
+                new { id = resultDto.RecipeId },
+                resultDto
             );
         }
 
         // GET /api/recipes
         [HttpGet]
-        public async Task<IActionResult> GetRecipes()
+        public async Task<IActionResult> GetAllRecipes()
         {
-            var recipes = await _recipeService.GetAllRecipes();
-            return Ok(recipes);
+            var list = await _recipeService.GetAllRecipes();
+            return Ok(list);
         }
 
         // GET /api/recipes/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
-            var recipe = await _recipeService.GetRecipeById(id);
-            if (recipe == null)
-                return NotFound(new { Message = "Recette introuvable" });
-
-            return Ok(recipe);
+            var r = await _recipeService.GetRecipeById(id);
+            if (r == null) return NotFound();
+            return Ok(r);
         }
 
         // PUT /api/recipes/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeUpdateDTO recipeDto)
+        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeUpdateDTO dto)
         {
-            var result = await _recipeService.UpdateRecipe(id, recipeDto);
-            if (!result)
-                return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
-
+            var ok = await _recipeService.UpdateRecipe(id, dto);
+            if (!ok) return NotFound();
             return NoContent();
         }
 
-        // DELETE /api/recipes/{id}
+        // DELETE /api/recipes/{id}?userId=...
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRecipe(int id, string userId)
+        public async Task<IActionResult> DeleteRecipe(int id, [FromQuery] string userId)
         {
-            var result = await _recipeService.DeleteRecipe(id, userId);
-            if (!result)
-                return NotFound(new { Message = "Recette non trouvée ou accès refusé" });
-
+            var ok = await _recipeService.DeleteRecipe(id, userId);
+            if (!ok) return NotFound();
             return NoContent();
         }
     }
