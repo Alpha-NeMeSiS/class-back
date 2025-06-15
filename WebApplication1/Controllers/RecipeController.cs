@@ -1,12 +1,13 @@
 ﻿// Controllers/RecipeController.cs
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using WebApplication1.DTO;     // RecipeFormDto, RecipeDTO, etc.
+using System.Security.Claims;
+using WebApplication1.DTO;     // RecipeFormDto, RecipeDTO, RecipeUpdateDTO, etc.
 using WebApplication1.Models;  // Recipe, Ingredient, Step
 using WebApplication1.Service; // RecipeService
 
@@ -14,6 +15,7 @@ namespace WebApplication1.Controllers
 {
     [Route("api/recipes")]
     [ApiController]
+    [Authorize]   // protège tous les endpoints de ce controller
     public class RecipeController : ControllerBase
     {
         private readonly RecipeService _recipeService;
@@ -23,7 +25,25 @@ namespace WebApplication1.Controllers
             _recipeService = recipeService;
         }
 
+        // --------------------------------------------------
+        // GET /api/recipes/me
+        // Renvoie les recettes créées par l’utilisateur courant
+        // --------------------------------------------------
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyRecipes()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var list = await _recipeService.GetRecipesByUserAsync(userId);
+            return Ok(list);
+        }
+
+        // --------------------------------------------------
         // POST /api/recipes
+        // Crée une nouvelle recette (multipart/form-data)
+        // --------------------------------------------------
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateRecipe([FromForm] RecipeFormDto dto)
@@ -56,27 +76,24 @@ namespace WebApplication1.Controllers
                 Category = dto.Category,
                 ImageUrl = imageUrl,
                 CreatedBy = dto.UserId,
-
-                // On zippe nom & unité, chaîne vide si unité non fournie
                 Ingredients = dto.Ingredients?
-                    .Select((name, idx) => new Ingredient
-                    {
-                        Name = name,
-                        Unit = (dto.IngredientUnits != null && dto.IngredientUnits.Length > idx)
-                               ? dto.IngredientUnits[idx]
-                               : String.Empty
-                    })
-                    .ToList()
-                  ?? new List<Ingredient>(),
-
+                                    .Select((name, idx) => new Ingredient
+                                    {
+                                        Name = name,
+                                        Unit = (dto.IngredientUnits != null && dto.IngredientUnits.Length > idx)
+                                               ? dto.IngredientUnits[idx]
+                                               : String.Empty
+                                    })
+                                    .ToList()
+                                  ?? new List<Ingredient>(),
                 Steps = dto.Instructions?
-                    .Select((text, idx) => new Step
-                    {
-                        Description = text,
-                        Order = idx + 1
-                    })
-                    .ToList()
-                  ?? new List<Step>()
+                                    .Select((text, idx) => new Step
+                                    {
+                                        Description = text,
+                                        Order = idx + 1
+                                    })
+                                    .ToList()
+                                  ?? new List<Step>()
             };
 
             // 3) Persistance via le service
@@ -117,7 +134,10 @@ namespace WebApplication1.Controllers
             );
         }
 
+        // --------------------------------------------------
         // GET /api/recipes
+        // Renvoie toutes les recettes
+        // --------------------------------------------------
         [HttpGet]
         public async Task<IActionResult> GetAllRecipes()
         {
@@ -125,7 +145,10 @@ namespace WebApplication1.Controllers
             return Ok(list);
         }
 
+        // --------------------------------------------------
         // GET /api/recipes/{id}
+        // Renvoie une recette par son ID
+        // --------------------------------------------------
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
@@ -134,7 +157,10 @@ namespace WebApplication1.Controllers
             return Ok(r);
         }
 
+        // --------------------------------------------------
         // PUT /api/recipes/{id}
+        // Met à jour une recette
+        // --------------------------------------------------
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeUpdateDTO dto)
         {
@@ -143,7 +169,10 @@ namespace WebApplication1.Controllers
             return NoContent();
         }
 
+        // --------------------------------------------------
         // DELETE /api/recipes/{id}?userId=...
+        // Supprime une recette si l’utilisateur est le créateur
+        // --------------------------------------------------
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id, [FromQuery] string userId)
         {

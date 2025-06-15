@@ -1,17 +1,14 @@
 ﻿// Repositories/RecipeRepository.cs
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.CourseDbContext;
 using WebApplication1.Models;
-using WebApplication1.Service;
 
 namespace WebApplication1.Repositories
 {
-    // Veillez à déclarer également cette interface en public dans IRecipeRepository.cs
-    public class RecipeRepository : IRecipeRepository
+    public class RecipeRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -20,7 +17,9 @@ namespace WebApplication1.Repositories
             _context = context;
         }
 
-        // Récupère toutes les recettes (inclut ingrédients, étapes, commentaires)
+        /// <summary>
+        /// Récupère toutes les recettes (avec ingrédients, étapes et commentaires)
+        /// </summary>
         public async Task<List<Recipe>> GetAllAsync()
         {
             return await _context.Recipes
@@ -30,7 +29,9 @@ namespace WebApplication1.Repositories
                 .ToListAsync();
         }
 
-        // Récupère une recette par son ID
+        /// <summary>
+        /// Récupère une recette par son ID (avec détails)
+        /// </summary>
         public async Task<Recipe?> GetByIdAsync(int id)
         {
             return await _context.Recipes
@@ -40,7 +41,9 @@ namespace WebApplication1.Repositories
                 .FirstOrDefaultAsync(r => r.RecipeId == id);
         }
 
-        // Ajoute une nouvelle recette et renvoie l’entité avec son ID
+        /// <summary>
+        /// Ajoute une nouvelle recette et renvoie l’entité créée (avec son ID)
+        /// </summary>
         public async Task<Recipe> AddAsync(Recipe recipe)
         {
             _context.Recipes.Add(recipe);
@@ -48,14 +51,18 @@ namespace WebApplication1.Repositories
             return recipe;
         }
 
-        // Met à jour une recette existante
+        /// <summary>
+        /// Met à jour une recette existante
+        /// </summary>
         public async Task UpdateAsync(Recipe recipe)
         {
             _context.Recipes.Update(recipe);
             await _context.SaveChangesAsync();
         }
 
-        // Supprime une recette, uniquement si userId correspond au créateur
+        /// <summary>
+        /// Supprime une recette si le userId correspond au créateur
+        /// </summary>
         public async Task<bool> DeleteAsync(int id, string userId)
         {
             var recipe = await _context.Recipes.FindAsync(id);
@@ -65,6 +72,19 @@ namespace WebApplication1.Repositories
             _context.Recipes.Remove(recipe);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        /// <summary>
+        /// Récupère toutes les recettes créées par un utilisateur donné
+        /// </summary>
+        public async Task<List<Recipe>> GetByUserAsync(string userId)
+        {
+            return await _context.Recipes
+                .Where(r => r.CreatedBy == userId)
+                .Include(r => r.Ingredients)
+                .Include(r => r.Steps)
+                .Include(r => r.Comments)
+                .ToListAsync();
         }
     }
 }

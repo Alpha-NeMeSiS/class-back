@@ -17,104 +17,47 @@ namespace WebApplication1.Service
             _repo = repo;
         }
 
+        /// <summary>
+        /// Récupère toutes les recettes
+        /// </summary>
         public async Task<List<RecipeDTO>> GetAllRecipes()
         {
             var all = await _repo.GetAllAsync();
-            return all.Select(r => new RecipeDTO
-            {
-                RecipeId = r.RecipeId,
-                Title = r.Title,
-                Description = r.Description,
-                PreparationTime = r.PreparationTime,
-                CookingTime = r.CookingTime,
-                Servings = r.Servings,
-                Category = r.Category,
-                ImageUrl = r.ImageUrl,
-                UserId = r.CreatedBy,
-                Ingredients = r.Ingredients
-                                    .Select(i => new IngredientDTO
-                                    {
-                                        Name = i.Name,
-                                        Unit = i.Unit
-                                    })
-                                    .ToList(),
-                Steps = r.Steps
-                                    .Select(s => new StepDTO
-                                    {
-                                        Description = s.Description,
-                                        Order = s.Order
-                                    })
-                                    .ToList()
-            }).ToList();
+            return all.Select(r => MapToDto(r)).ToList();
         }
 
+        /// <summary>
+        /// Récupère les recettes créées par un utilisateur donné
+        /// </summary>
+        public async Task<List<RecipeDTO>> GetRecipesByUserAsync(string userId)
+        {
+            var list = await _repo.GetByUserAsync(userId);
+            return list.Select(r => MapToDto(r)).ToList();
+        }
+
+        /// <summary>
+        /// Récupère une recette par son ID
+        /// </summary>
         public async Task<RecipeDTO> GetRecipeById(int id)
         {
             var r = await _repo.GetByIdAsync(id);
             if (r == null) return null;
 
-            return new RecipeDTO
-            {
-                RecipeId = r.RecipeId,
-                Title = r.Title,
-                Description = r.Description,
-                PreparationTime = r.PreparationTime,
-                CookingTime = r.CookingTime,
-                Servings = r.Servings,
-                Category = r.Category,
-                ImageUrl = r.ImageUrl,
-                UserId = r.CreatedBy,
-                Ingredients = r.Ingredients
-                                    .Select(i => new IngredientDTO
-                                    {
-                                        Name = i.Name,
-                                        Unit = i.Unit
-                                    })
-                                    .ToList(),
-                Steps = r.Steps
-                                    .Select(s => new StepDTO
-                                    {
-                                        Description = s.Description,
-                                        Order = s.Order
-                                    })
-                                    .ToList()
-            };
+            return MapToDto(r);
         }
 
-        // On prend maintenant directement l'entité Recipe (avec Unit déjà rempli)
+        /// <summary>
+        /// Crée une nouvelle recette
+        /// </summary>
         public async Task<RecipeDTO> CreateRecipe(Recipe recipe)
         {
             var created = await _repo.AddAsync(recipe);
-
-            // on renvoie le DTO complet avec Unit
-            return new RecipeDTO
-            {
-                RecipeId = created.RecipeId,
-                Title = created.Title,
-                Description = created.Description,
-                PreparationTime = created.PreparationTime,
-                CookingTime = created.CookingTime,
-                Servings = created.Servings,
-                Category = created.Category,
-                ImageUrl = created.ImageUrl,
-                UserId = created.CreatedBy,
-                Ingredients = created.Ingredients
-                                    .Select(i => new IngredientDTO
-                                    {
-                                        Name = i.Name,
-                                        Unit = i.Unit
-                                    })
-                                    .ToList(),
-                Steps = created.Steps
-                                    .Select(s => new StepDTO
-                                    {
-                                        Description = s.Description,
-                                        Order = s.Order
-                                    })
-                                    .ToList()
-            };
+            return MapToDto(created);
         }
 
+        /// <summary>
+        /// Met à jour une recette existante
+        /// </summary>
         public async Task<bool> UpdateRecipe(int id, RecipeUpdateDTO dto)
         {
             var r = await _repo.GetByIdAsync(id);
@@ -128,15 +71,49 @@ namespace WebApplication1.Service
             r.Category = dto.Category;
             r.ImageUrl = dto.ImageUrl;
             r.CreatedBy = dto.UserId;
-            // si tu veux gérer Ingredients/Steps en update, fais-le ici
+            // TODO : gérer Ingredients/Steps si besoin
 
             await _repo.UpdateAsync(r);
             return true;
         }
 
+        /// <summary>
+        /// Supprime une recette si l’utilisateur est bien le créateur
+        /// </summary>
         public async Task<bool> DeleteRecipe(int id, string userId)
         {
             return await _repo.DeleteAsync(id, userId);
+        }
+
+        // Méthode privée pour centraliser le mapping Entity → DTO
+        private RecipeDTO MapToDto(Recipe r)
+        {
+            return new RecipeDTO
+            {
+                RecipeId = r.RecipeId,
+                Title = r.Title,
+                Description = r.Description,
+                PreparationTime = r.PreparationTime,
+                CookingTime = r.CookingTime,
+                Servings = r.Servings,
+                Category = r.Category,
+                ImageUrl = r.ImageUrl,
+                UserId = r.CreatedBy,
+                Ingredients = r.Ingredients
+                                      .Select(i => new IngredientDTO
+                                      {
+                                          Name = i.Name,
+                                          Unit = i.Unit
+                                      })
+                                      .ToList(),
+                Steps = r.Steps
+                                      .Select(s => new StepDTO
+                                      {
+                                          Description = s.Description,
+                                          Order = s.Order
+                                      })
+                                      .ToList()
+            };
         }
     }
 }
