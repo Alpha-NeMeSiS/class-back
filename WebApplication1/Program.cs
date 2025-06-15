@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http.Features;         // ← Ajouté
 using System.Text;
+using System.Text.Json.Serialization;
 using WebApplication1.CourseDbContext;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
@@ -43,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
                 Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
                     Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id   = "Bearer"
                 }
             },
             new string[] {}
@@ -55,37 +60,42 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler =
-            System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        // IgnoreCycles pour conserver un JSON « array » classique
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
 // 4. Autoriser multipart/form-data jusqu’à 50 Mo
 builder.Services.Configure<FormOptions>(opts =>
 {
-    opts.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 Mo
+    opts.MultipartBodyLengthLimit = 50 * 1024 * 1024;
 });
 
-// 5. DI pour vos services et repositories
+// 5. DI pour vos repositories
 builder.Services.AddScoped<StepRepository>();
 builder.Services.AddScoped<IngredientRepository>();
-builder.Services.AddScoped<RecipeService>();
-builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<CommentRepository>();
+
+// 6. DI pour vos services
+builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<AutheService>();
 
-// 6. EF Core
+// 7. EF Core
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
-// 7. Identity
+// 8. Identity
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// 8. Authentification JWT
+// 9. Authentification JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+var keyBytes = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? string.Empty);
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,6 +103,8 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -101,29 +113,23 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes)
     };
 });
 
 var app = builder.Build();
 
-// 9. Swagger en dev
+// 10. Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 10. Servir les fichiers statiques (wwwroot/uploads)
-app.UseStaticFiles();
-
-// 11. CORS, HTTPS, Auth
-app.UseCors("FrontOrigins");
+app.UseStaticFiles();            // servir wwwroot
+app.UseCors("FrontOrigins");     // CORS
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
-// 12. Map controllers
 app.MapControllers();
-
 app.Run();

@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.DTO
 {
+    /// <summary>
+    /// DTO utilisé pour la création et l’édition d’une recette
+    /// </summary>
     public class RecipeFormDto
     {
         [Required] public string Title { get; set; }
@@ -15,12 +18,9 @@ namespace WebApplication1.DTO
         public string Category { get; set; }
         public IFormFile Image { get; set; }
 
-        // on ajoute cette propriété pour recevoir les unités
+        // réception des quantités/unités via form data
         public string[] IngredientUnits { get; set; }
-
-        // déjà existant : réceptionne plusieurs fois data.append("ingredients", name)
         public string[] Ingredients { get; set; }
-
         public string[] Instructions { get; set; }
 
         [Required] public string UserId { get; set; }
