@@ -70,12 +70,30 @@ namespace WebApplication1.Service
                .ToList();
 
         private RecipeDTO MapToDto(Recipe r)
-            => new RecipeDTO
-            {
-                RecipeId = r.RecipeId,
-                Title = r.Title,
-                Description = r.Description,
-                // mappez ici Ingredients, Steps, Comments…
-            };
+     => new RecipeDTO
+     {
+         RecipeId = r.RecipeId,
+         Title = r.Title,
+         Description = r.Description,
+         ImageUrl = r.ImageUrl,
+         PreparationTime = r.PreparationTime,
+         CookingTime = r.CookingTime,
+         Servings = r.Servings,
+         Category = r.Category,
+         UserId = r.CreatedBy,
+
+         Ingredients = r.Ingredients?.Select(i => new IngredientDTO
+         {
+             Name = i.Name,
+             Quantity = i.Quantity,
+             Unit = i.Unit
+         }).ToList(),
+
+         Steps = r.Steps?.OrderBy(s => s.Order).Select(s => new StepDTO
+         {
+             Order = s.Order,
+             Description = s.Description
+         }).ToList()
+     };
     }
 }
