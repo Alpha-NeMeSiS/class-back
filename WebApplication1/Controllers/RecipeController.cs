@@ -36,6 +36,7 @@ namespace WebApplication1.Controllers
 
             return Ok(results);
         }
+
         // POST /api/recipes
         // Création d'une nouvelle recette (multipart/form-data si image/file)
         [HttpPost]

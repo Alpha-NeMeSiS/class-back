@@ -16,6 +16,8 @@ namespace WebApplication1.DTO
         [Range(1, int.MaxValue)] public int Servings { get; set; }
 
         public string Category { get; set; }
+
+        [Required]
         public IFormFile Image { get; set; }
 
         // réception des quantités/unités via form data
